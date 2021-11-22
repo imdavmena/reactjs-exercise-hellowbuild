@@ -12,15 +12,14 @@ export default function Profile() {
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     const userName = localStorage.getItem("userName");
-    setAuthSession(auth === "authenticated");
-    if (auth) {
+    setAuthSession(auth);
+    if (auth !== null) {
       setUsername(userName);
     }
   }, []);
 
   useEffect(() => {
     const url = "https://api.github.com/users/";
-
     const fetchUser = async () => {
       return await fetch(`${url}${userName}`)
         .then((res) => {
@@ -34,37 +33,40 @@ export default function Profile() {
   }, [userName]);
 
   useEffect(() => {
-    if (!authSession) {
+    if (authSession === null) {
       setTimeout(() => {
         router.push("/");
       }, 2000);
-      return (
-        <Layout auth={authSession}>
-          <div className="flex h-screen items-center justify-center">
-            <div className="flex flex-col items-center justify-center">
-              <iframe
-                src="https://giphy.com/embed/3og0IRWr9D2edzkdTa"
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                className="giphy-embed"
-                allowFullScreen
-              ></iframe>
-              <h4>
-                Loading
-                <span className="font-bold animate-pulse text-xl">.</span>
-                <span className="font-bold animate-pulse text-xl">.</span>
-                <span className="font-bold animate-pulse text-xl">.</span>
-              </h4>
-            </div>
-          </div>
-        </Layout>
-      );
     }
-  });
+  }, []);
+
+  if (authSession === null) {
+    return (
+      <Layout auth={authSession} title={"profile"}>
+        <div className="flex h-screen items-center justify-center">
+          <div className="flex flex-col items-center justify-center">
+            <iframe
+              src="https://giphy.com/embed/3og0IRWr9D2edzkdTa"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              className="giphy-embed"
+              allowFullScreen
+            ></iframe>
+            <h4>
+              Loading
+              <span className="font-bold animate-pulse text-xl">.</span>
+              <span className="font-bold animate-pulse text-xl">.</span>
+              <span className="font-bold animate-pulse text-xl">.</span>
+            </h4>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
-    <Layout auth={authSession}>
+    <Layout auth={authSession} title={"profile"}>
       <div className="max-w-7xl mx-auto my-16">
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">

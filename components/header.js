@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { Popover, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon, UserIcon } from "@heroicons/react/outline";
@@ -43,11 +43,11 @@ const Header = ({ auth }) => {
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </Popover.Button>
           </div>
-          <div className="mt-6">
+          <div className="mt-6  xs:hidden ">
             <nav className="grid grid-flow-col gap-y-8 gap-x-8">
               {solutions.map(
                 (item) =>
-                  auth && (
+                  auth !== null && (
                     <Link href={item.href} key={item.name}>
                       <a className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
                         <item.icon
@@ -64,7 +64,7 @@ const Header = ({ auth }) => {
             </nav>
           </div>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            {!auth ? (
+            {auth === null ? (
               <Link
                 href="/sign-in"
                 className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
@@ -115,39 +115,50 @@ const Header = ({ auth }) => {
               </div>
               <div className="mt-6">
                 <nav className="grid gap-y-8">
-                  {solutions.map((item) => (
-                    <Link href={item.href} key={item.name}>
-                      <a className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
-                        <item.icon
-                          className="flex-shrink-0 h-6 w-6 text-indigo-600"
-                          aria-hidden="true"
-                        />
-                        <span className="ml-3 text-base font-medium text-gray-900">
-                          {item.name}
-                        </span>
-                      </a>
-                    </Link>
-                  ))}
+                  {auth !== null &&
+                    solutions.map((item) => (
+                      <Link href={item.href} key={item.name}>
+                        <a className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50">
+                          <item.icon
+                            className="flex-shrink-0 h-6 w-6 text-indigo-600"
+                            aria-hidden="true"
+                          />
+                          <span className="ml-3 text-base font-medium text-gray-900">
+                            {item.name}
+                          </span>
+                        </a>
+                      </Link>
+                    ))}
                 </nav>
               </div>
             </div>
             <div className="py-6 px-5 space-y-6">
               <div>
-                {!auth && (
-                  <a
-                    href="/sign-up"
-                    className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                  >
-                    Sign up
-                  </a>
+                {auth === null && (
+                  <Link href="/sign-in">
+                    <a className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                      Sign in
+                    </a>
+                  </Link>
                 )}
 
-                <p className="mt-6 text-center text-base font-medium text-gray-500">
-                  Existing customer?{" "}
-                  <a href="#" className="text-indigo-600 hover:text-indigo-500">
-                    Sign in
-                  </a>
-                </p>
+                {auth === null ? (
+                  <p className="mt-6 text-center text-base font-medium text-gray-500">
+                    Existing customer?{" "}
+                    <Link href="/sign-up">
+                      <a className="text-indigo-600 hover:text-indigo-500">
+                        Sign up
+                      </a>
+                    </Link>
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => signOut()}
+                    className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+                  >
+                    <a>Sign out</a>
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ import Hero from "../components/Sections/Hero";
 import ListRepositories from "../components/Sections/Repositories/List";
 
 export default function Home() {
-  const [authSession, setAuthSession] = useState(false);
+  const [authSession, setAuthSession] = useState(null);
   const [userName, setUsername] = useState("");
   const [gitUser, setGitUser] = useState({});
   const [gitRepositories, setGitRepositories] = useState([]);
@@ -14,7 +14,7 @@ export default function Home() {
     const auth = localStorage.getItem("auth");
     const userName = localStorage.getItem("userName");
 
-    setAuthSession(auth === "authenticated");
+    setAuthSession(auth);
     setUsername(userName);
   }, []);
 
@@ -39,14 +39,13 @@ export default function Home() {
         })
         .catch((err) => console.error(err, "repos"));
     };
-    if (authSession) {
+    if (authSession !== null) {
       fetchUser();
       fetchRepo();
     }
     return;
   }, [authSession]);
 
-  useEffect(() => {});
   return (
     <Layout title={"Welcome to my page"} auth={authSession}>
       <Hero />

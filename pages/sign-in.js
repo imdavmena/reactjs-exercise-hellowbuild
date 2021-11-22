@@ -14,7 +14,7 @@ export default function SignIn(props) {
     password: false,
   });
   const [loading, setLoading] = useState(false);
-  const [authSession, setAuthSession] = useState(false);
+  const [authSession, setAuthSession] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailStorage, setEmailStorage] = useState("");
@@ -23,16 +23,20 @@ export default function SignIn(props) {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== undefined) {
-      setEmailStorage(localStorage.getItem("email"));
-      setPasswordStorage(localStorage.getItem("password"));
+    const auth = localStorage.getItem("auth");
+
+    setEmailStorage(localStorage.getItem("email"));
+    setPasswordStorage(localStorage.getItem("password"));
+    setAuthSession(auth);
+
+    if (auth !== null) {
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
     }
   }, []);
 
-  useEffect(() => {
-    const auth = localStorage.getItem("auth");
-    setAuthSession(auth === "authenticated");
-  }, []);
+  useEffect(() => {});
 
   const onSubmit = useCallback(
     async (event) => {
@@ -80,10 +84,7 @@ export default function SignIn(props) {
     [email, password, loading]
   );
 
-  if (authSession) {
-    setTimeout(() => {
-      router.push("/");
-    }, 2000);
+  if (authSession !== null) {
     return (
       <Layout auth={authSession}>
         <div className="flex h-screen items-center justify-center">

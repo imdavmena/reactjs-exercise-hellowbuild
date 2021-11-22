@@ -7,11 +7,11 @@ import { LockClosedIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/dist/client/router";
 
 import Input from "../components/input";
-import Layout from "../components/Layout";
+import Loading from "../components/loading";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
-  const [authSession, setAuthSession] = useState(false);
+  const [authSession, setAuthSession] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
@@ -19,18 +19,32 @@ export default function SignUp() {
 
   useEffect(() => {
     const auth = localStorage.getItem("auth");
-    setAuthSession(auth === "authenticated");
+    setAuthSession(auth);
+
+    if (auth !== null) {
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
-    localStorage.setItem("userName", userName);
-  }, [email, password, userName]);
+  // useEffect(() => {
+  //   if (authSession !== null) {
+  //     localStorage.setItem("email", email);
+  //     localStorage.setItem("password", password);
+  //     localStorage.setItem("userName", userName);
+  //   }
+  // }, [email, password, userName]);
 
   const onSubmit = useCallback(
     async (event) => {
       setLoading(true);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("email", email);
+        localStorage.setItem("password", password);
+        localStorage.setItem("userName", userName);
+      }
+
       event.preventDefault();
       const res = await fetch("/api/signup", {
         method: "POST",
@@ -48,35 +62,11 @@ export default function SignUp() {
         router.push("/sign-in");
       }
     },
-    [loading]
+    [loading, email, password, userName]
   );
 
-  if (authSession) {
-    setTimeout(() => {
-      router.push("/");
-    }, 2000);
-    return (
-      <Layout auth={authSession}>
-        <div className="flex h-screen items-center justify-center">
-          <div className="flex flex-col items-center justify-center">
-            <iframe
-              src="https://giphy.com/embed/3og0IRWr9D2edzkdTa"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              className="giphy-embed"
-              allowFullScreen
-            ></iframe>
-            <h4>
-              Loading
-              <span className="font-bold animate-pulse text-xl">.</span>
-              <span className="font-bold animate-pulse text-xl">.</span>
-              <span className="font-bold animate-pulse text-xl">.</span>
-            </h4>
-          </div>
-        </div>
-      </Layout>
-    );
+  if (authSession !== null) {
+    return <Loading />;
   }
 
   return (
