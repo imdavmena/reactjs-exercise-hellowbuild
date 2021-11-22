@@ -112,6 +112,8 @@ export default function List({ auth, user, repos }) {
                         </div>
                       </div>
                     ))
+                  : !repos.length > 0
+                  ? "Loading.."
                   : repos.map((repositories) => (
                       <div
                         key={repositories.id}

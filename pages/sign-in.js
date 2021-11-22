@@ -6,7 +6,7 @@ import { ArrowCircleRightIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/dist/client/router";
 import { SupportIcon } from "@heroicons/react/outline";
 import { validateEmail } from "../lib/validations";
-import Layout from "../components/Layout";
+import Loading from "../components/loading";
 
 export default function SignIn(props) {
   const [error, setError] = useState({
@@ -36,15 +36,13 @@ export default function SignIn(props) {
     }
   }, []);
 
-  useEffect(() => {});
-
   const onSubmit = useCallback(
     async (event) => {
       setLoading(true);
       event.preventDefault();
 
       if (validateEmail(email)) {
-        setError({ email: true });
+        setError({ email: false });
       } else {
         setError({ email: true });
       }
@@ -85,28 +83,7 @@ export default function SignIn(props) {
   );
 
   if (authSession !== null) {
-    return (
-      <Layout auth={authSession}>
-        <div className="flex h-screen items-center justify-center">
-          <div className="flex flex-col items-center justify-center">
-            <iframe
-              src="https://giphy.com/embed/3og0IRWr9D2edzkdTa"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              className="giphy-embed"
-              allowFullScreen
-            ></iframe>
-            <h4>
-              Loading
-              <span className="font-bold animate-pulse text-xl">.</span>
-              <span className="font-bold animate-pulse text-xl">.</span>
-              <span className="font-bold animate-pulse text-xl">.</span>
-            </h4>
-          </div>
-        </div>
-      </Layout>
-    );
+    return <Loading />;
   }
 
   return (
