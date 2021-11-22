@@ -21,20 +21,22 @@ export default function List({ auth, user, repos }) {
   return (
     <div className="bg-white">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <div className="flex">
+        <div className="flex flex-col">
           <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">
             List repositories
           </h2>
-          <div className="flex flex-1 items-center justify-center">
-            <Input
-              type="search"
-              label="Search your repositories"
-              name="search-repositories"
-              placeholder="Search your repositories  🕵🏽‍♂️"
-              onChange={onSearch}
-              classContent="w-2/3"
-            />
-          </div>
+          {auth && (
+            <div className="flex flex-1 items-center justify-center">
+              <Input
+                type="search"
+                label="Search your repositories"
+                name="search-repositories"
+                placeholder="Search your repositories  🕵🏽‍♂️"
+                onChange={onSearch}
+                classContent="w-2/3"
+              />
+            </div>
+          )}
         </div>
 
         <div className="mt-6 flex">

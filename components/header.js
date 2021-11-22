@@ -43,7 +43,7 @@ const Header = ({ auth }) => {
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </Popover.Button>
           </div>
-          <div className="mt-6  xs:hidden ">
+          <div className="mt-6 hidden  md:flex ">
             <nav className="grid grid-flow-col gap-y-8 gap-x-8">
               {solutions.map(
                 (item) =>

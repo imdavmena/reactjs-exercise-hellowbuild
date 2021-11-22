@@ -38,7 +38,7 @@ export default function Profile() {
         router.push("/");
       }, 2000);
     }
-  }, []);
+  });
 
   if (authSession === null) {
     return (
